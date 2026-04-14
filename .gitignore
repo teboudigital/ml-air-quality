@@ -137,12 +137,14 @@ celerybeat.pid
 # Environments
 .env
 .envrc
+.tmp/
 .venv
 env/
 venv/
 ENV/
 env.bak/
 venv.bak/
+pytest-cache-files-*/
 
 # Spyder project settings
 .spyderproject

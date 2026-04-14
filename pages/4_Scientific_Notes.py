@@ -1,0 +1,70 @@
+import streamlit as st
+
+
+st.set_page_config(page_title="Scientific Notes", layout="wide")
+st.title("Scientific Notes")
+
+st.subheader("Dataset Context")
+st.write(
+    "This dataset contains hourly measurements collected by a chemical multisensor device deployed at road level "
+    "in an Italian urban area. Sensor responses are recorded together with certified reference analyzer "
+    "measurements for several pollutants. The analysis therefore treats the problem as a sensor calibration and "
+    "regression task, not as a classification task."
+)
+
+st.subheader("Scientific Assumptions")
+st.markdown(
+    """
+- `-200` values are invalid measurements and are treated as missing data.
+- `GT` columns represent certified reference analyzer concentrations.
+- `PT08...` columns represent raw metal oxide sensor responses, not certified pollutant concentrations.
+- Temperature and humidity are included because environmental conditions can affect chemical sensor responses.
+- Chronological evaluation is used because the dataset is time ordered and may contain sensor drift or concept drift.
+"""
+)
+
+st.subheader("Interpretation of Air Quality")
+st.markdown(
+    """
+- Lower `CO(GT)`, `C6H6(GT)`, `NOx(GT)`, and `NO2(GT)` generally indicate cleaner conditions for the measured pollutants.
+- Higher `CO(GT)`, `C6H6(GT)`, `NOx(GT)`, and `NO2(GT)` generally indicate more polluted episodes.
+- `NOx(GT)` represents total nitrogen oxides, while `NO2(GT)` represents nitrogen dioxide specifically.
+- `C6H6(GT)` represents benzene, a pollutant of interest for sensor calibration in this dataset.
+- These values should be read together with time, humidity, temperature, and missing-data patterns.
+
+This interpretation is qualitative. The dashboard does not certify legal air-quality compliance because official assessment depends on pollutant-specific averaging windows, validated regulatory procedures, and current threshold values.
+"""
+)
+
+st.subheader("Methodological Limits")
+st.markdown(
+    """
+- The benchmark uses `DummyRegressor`, `Ridge`, `RandomForestRegressor`, and `GradientBoostingRegressor`.
+- The modelling task is tabular regression, not classification.
+- The benchmark provides baseline regression models, not a full atmospheric chemistry model.
+- Missing feature values are handled with median imputation inside the modelling pipeline.
+- Drift is considered through chronological evaluation, but no explicit drift-correction algorithm is implemented.
+- Prediction uncertainty is not estimated.
+- The app does not simulate real-time deployment, sensor maintenance, or model monitoring.
+"""
+)
+
+st.subheader("Possible Extensions")
+st.markdown(
+    """
+- Connect the application to a database such as PostgreSQL to store measurements, model outputs, and data-quality checks.
+- Add an API layer to receive measurements from external services or deployed sensor devices.
+- Support near real-time ingestion from air-quality sensors instead of using only a static historical CSV file.
+- Add scheduled validation jobs to monitor missing values, sensor drift, and prediction error over time.
+- Store trained model artifacts and evaluation reports with versioning.
+- Add uncertainty estimates or prediction intervals for scientific interpretation.
+- Compare more advanced drift-aware calibration strategies against the current baseline models.
+"""
+)
+
+st.subheader("Summary")
+st.markdown(
+    """
+The project provides a reproducible baseline workflow for noisy air-quality sensor data: loading, cleaning, missing-value handling, exploratory analysis, leakage-aware feature construction, and regression evaluation. Its strongest scientific value is the explicit treatment of sensor responses as noisy calibration inputs rather than direct pollutant measurements.
+"""
+)

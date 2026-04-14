@@ -1,11 +1,11 @@
-# Titanic Survival Prediction App
+# Documentation
 
-Streamlit application for Titanic survival analysis and prediction.
+This folder contains the project documentation for the Air Quality Sensor Calibration Dashboard.
 
-## Project Structure
+Main documents:
 
-- `app.py`: Main application file
-- `src/`: Modular source code
-- `pages/`: Multiple app pages
-- `assets/`: Static assets (CSS, images)
-- `tests/`: Unit tests
+- `TECHNICAL_ARCHITECTURE.md`: architecture, data flow, modelling workflow, and scientific limitations.
+- `air_quality_analysis_ml.ipynb`: reproducible EDA and regression notebook.
+- `air_quality_analysis_ml_it.ipynb`: Italian explanatory notebook with variable descriptions and graph interpretation.
+
+The documentation is intentionally written in English because the project is meant for portfolio and interview use.
