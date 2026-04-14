@@ -87,6 +87,19 @@ The current feature set includes:
 
 The feature set intentionally excludes the other reference analyzer concentrations. Including them could produce a stronger numerical score, but it would weaken the sensor calibration interpretation because those signals are ground-truth measurements from a certified analyzer.
 
+## Model Preprocessing and Model Families
+
+All models use median imputation for missing feature values through `SimpleImputer(strategy="median")`. Rows with a missing target are excluded before model fitting.
+
+The benchmark uses four model families:
+
+- `DummyRegressor`: median baseline used as the minimum reference performance.
+- `Ridge`: regularized linear regression with median imputation and `StandardScaler`.
+- `RandomForestRegressor`: tree-based ensemble with median imputation and no feature scaling.
+- `GradientBoostingRegressor`: sequential tree-based ensemble with median imputation and no feature scaling.
+
+`StandardScaler` is applied only to the Ridge model because linear models are sensitive to feature scale. Min-max normalization is not used. The tree-based models do not require standardization in the same way, so they are kept in their original measurement scale after imputation.
+
 ## Evaluation Strategy
 
 The project uses:

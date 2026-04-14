@@ -36,13 +36,37 @@ This interpretation is qualitative. The dashboard does not certify legal air-qua
 """
 )
 
+st.subheader("Modelling Methods")
+st.markdown(
+    """
+All models are evaluated as **regression models**. The goal is to estimate a continuous pollutant concentration, not to classify observations into categories.
+
+Common preprocessing:
+
+- Rows with a missing target value are excluded from modelling.
+- Missing feature values are handled with `SimpleImputer(strategy="median")`.
+- The feature set includes sensor responses, meteorological variables, and temporal features.
+- Other `GT` reference gas concentrations are excluded from the feature matrix to reduce target leakage.
+- Evaluation uses a chronological holdout split and time-series cross-validation.
+
+Model-specific choices:
+
+| Model | Preprocessing | Why it is used | Main limitation |
+|---|---|---|---|
+| `DummyRegressor` | Median imputation | Baseline model. It predicts a simple central value and shows the minimum performance to beat. | It does not learn sensor relationships. |
+| `Ridge` | Median imputation + `StandardScaler` | Regularized linear regression. Useful to test whether a simple linear calibration is already informative. | It may miss non-linear sensor behaviour. |
+| `RandomForestRegressor` | Median imputation, no scaling | Tree-based ensemble. Useful for non-linear relationships and feature interactions. | It can be less transparent and may overfit if not controlled. |
+| `GradientBoostingRegressor` | Median imputation, no scaling | Sequential tree-based ensemble. Useful for stronger non-linear regression baselines. | It still does not explicitly model sensor drift or uncertainty. |
+
+`StandardScaler` is used only for `Ridge`, because linear models are sensitive to feature scale. The tree-based models do not require standardization in the same way, so no min-max normalization is applied.
+"""
+)
+
 st.subheader("Methodological Limits")
 st.markdown(
     """
-- The benchmark uses `DummyRegressor`, `Ridge`, `RandomForestRegressor`, and `GradientBoostingRegressor`.
 - The modelling task is tabular regression, not classification.
 - The benchmark provides baseline regression models, not a full atmospheric chemistry model.
-- Missing feature values are handled with median imputation inside the modelling pipeline.
 - Drift is considered through chronological evaluation, but no explicit drift-correction algorithm is implemented.
 - Prediction uncertainty is not estimated.
 - The app does not simulate real-time deployment, sensor maintenance, or model monitoring.

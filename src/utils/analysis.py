@@ -3,6 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 import pandas as pd
+from scipy import stats
 
 from src.config import REFERENCE_COLUMNS, SENSOR_COLUMNS
 
@@ -60,6 +61,61 @@ def sensor_reference_correlation(df: pd.DataFrame, method: str = "pearson") -> p
     """Compute correlations between sensor responses and reference targets."""
     columns = [col for col in SENSOR_COLUMNS + REFERENCE_COLUMNS if col in df.columns]
     return df[columns].corr(method=method, numeric_only=True)
+
+
+def correlation_p_values(df: pd.DataFrame, method: str = "pearson") -> pd.DataFrame:
+    """Compute pairwise p-values for Pearson or Spearman correlations."""
+    columns = [col for col in SENSOR_COLUMNS + REFERENCE_COLUMNS if col in df.columns]
+    p_values = pd.DataFrame(1.0, index=columns, columns=columns)
+
+    for left_index, left in enumerate(columns):
+        p_values.loc[left, left] = 0.0
+        for right in columns[left_index + 1 :]:
+            pair = df[[left, right]].dropna()
+            if len(pair) < 3 or pair[left].nunique() < 2 or pair[right].nunique() < 2:
+                p_value = 1.0
+            elif method == "pearson":
+                _, p_value = stats.pearsonr(pair[left], pair[right])
+            elif method == "spearman":
+                _, p_value = stats.spearmanr(pair[left], pair[right])
+            else:
+                raise ValueError("method must be 'pearson' or 'spearman'.")
+
+            p_values.loc[left, right] = p_value
+            p_values.loc[right, left] = p_value
+
+    return p_values
+
+
+def correlation_adjacency_matrix(
+    correlation: pd.DataFrame,
+    p_values: pd.DataFrame,
+    correlation_threshold: float,
+    alpha: float,
+) -> pd.DataFrame:
+    """Create an adjacency matrix from correlation strength and p-value filters."""
+    adjacency = ((correlation.abs() >= correlation_threshold) & (p_values <= alpha)).astype(int)
+    for column in adjacency.columns:
+        adjacency.loc[column, column] = 0
+    return adjacency
+
+
+def correlation_edge_list(correlation: pd.DataFrame, adjacency: pd.DataFrame) -> pd.DataFrame:
+    """Build an undirected edge list from an adjacency matrix."""
+    rows = []
+    columns = list(adjacency.columns)
+    for left_index, left in enumerate(columns):
+        for right in columns[left_index + 1 :]:
+            if adjacency.loc[left, right] == 1:
+                rows.append(
+                    {
+                        "source": left,
+                        "target": right,
+                        "correlation": correlation.loc[left, right],
+                        "abs_correlation": abs(correlation.loc[left, right]),
+                    }
+                )
+    return pd.DataFrame(rows).sort_values("abs_correlation", ascending=False).reset_index(drop=True)
 
 
 def monthly_missingness(df: pd.DataFrame) -> pd.DataFrame:
