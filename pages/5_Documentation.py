@@ -6,6 +6,7 @@ import sys
 
 import streamlit as st
 
+from src.config import ENGLISH_DASHBOARD_URL, ITALIAN_DASHBOARD_URL, SPHINX_DOCS_URL
 from src.ui.theme import apply_theme
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -49,6 +50,12 @@ st.write(
     "This page summarizes the project documentation available in the repository. "
     "The Streamlit dashboard remains the interactive analysis interface; Sphinx provides the structured technical and API documentation."
 )
+
+st.subheader("Online Deployments")
+deployment_cols = st.columns(3)
+deployment_cols[0].link_button("English dashboard", ENGLISH_DASHBOARD_URL)
+deployment_cols[1].link_button("Italian dashboard", ITALIAN_DASHBOARD_URL)
+deployment_cols[2].link_button("Sphinx documentation", SPHINX_DOCS_URL)
 
 st.subheader("Repository Documentation")
 docs = [
@@ -99,7 +106,7 @@ if SPHINX_INDEX.exists():
     st.success("Sphinx HTML documentation has already been built.")
 
     if IS_RENDER:
-        st.info("On Render, serve these files through the deployed app or a static site route instead of a localhost URL.")
+        st.link_button("Open deployed Sphinx documentation", SPHINX_DOCS_URL)
     else:
         if st.button("Start local documentation server"):
             if is_port_open():
