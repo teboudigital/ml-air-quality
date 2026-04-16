@@ -1,6 +1,7 @@
 import plotly.express as px
 import streamlit as st
 
+from src.ui.theme import apply_theme, themed_plotly
 from src.utils.analysis import build_dataset_profile, monthly_missingness, numeric_summary, variable_type_summary
 from src.utils.data_loader import load_air_quality_data, summarize_data_quality
 from src.utils.metadata import variable_dictionary
@@ -8,6 +9,7 @@ from src.utils.preprocessing import missingness_table
 
 
 st.set_page_config(page_title="Data Overview", layout="wide")
+apply_theme()
 st.title("Data Overview")
 
 df = load_air_quality_data()
@@ -40,12 +42,14 @@ type_summary = variable_type_summary(df)
 chart_col, table_col = st.columns([2, 1])
 with chart_col:
     st.plotly_chart(
-        px.pie(
-            type_summary,
-            names="variable_type",
-            values="count",
-            hole=0.45,
-            title="Variable type distribution after preprocessing",
+        themed_plotly(
+            px.pie(
+                type_summary,
+                names="variable_type",
+                values="count",
+                hole=0.45,
+                title="Variable type distribution after preprocessing",
+            )
         ),
         use_container_width=True,
     )
@@ -74,7 +78,7 @@ fig = px.bar(
     y="missing_percent",
     title="Missing values after converting -200 sentinels",
 )
-st.plotly_chart(fig, use_container_width=True)
+st.plotly_chart(themed_plotly(fig), use_container_width=True)
 with st.expander("How to interpret missing values"):
     st.markdown(
         """
@@ -86,7 +90,10 @@ Large missing percentages mean that a variable is less reliable for modelling un
 
 st.subheader("Monthly Data Quality")
 monthly = monthly_missingness(df)
-st.plotly_chart(px.line(monthly, x="month", y="missing_cells", markers=True), use_container_width=True)
+st.plotly_chart(
+    themed_plotly(px.line(monthly, x="month", y="missing_cells", markers=True)),
+    use_container_width=True,
+)
 with st.expander("How to interpret monthly data quality"):
     st.markdown(
         """

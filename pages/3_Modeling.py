@@ -2,10 +2,12 @@ import streamlit as st
 
 from src.config import DEFAULT_TARGET, SUPPORTED_TARGETS
 from src.models.regression import evaluate_models
+from src.ui.theme import apply_theme
 from src.utils.data_loader import load_air_quality_data
 
 
 st.set_page_config(page_title="Regression Modeling", layout="wide")
+apply_theme()
 st.title("Regression Modeling")
 
 df = load_air_quality_data()

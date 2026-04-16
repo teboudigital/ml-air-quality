@@ -1,7 +1,9 @@
 import streamlit as st
 
+from src.ui.theme import apply_theme
 
 st.set_page_config(page_title="Scientific Notes", layout="wide")
+apply_theme()
 st.title("Scientific Notes")
 
 st.subheader("Dataset Context")

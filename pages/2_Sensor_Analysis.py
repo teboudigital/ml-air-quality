@@ -4,11 +4,13 @@ import plotly.graph_objects as go
 import streamlit as st
 
 from src.config import REFERENCE_COLUMNS, SENSOR_COLUMNS
+from src.ui.theme import COLORS, apply_theme, themed_plotly
 from src.utils.analysis import correlation_adjacency_matrix, correlation_edge_list, correlation_p_values, sensor_reference_correlation
 from src.utils.data_loader import load_air_quality_data
 
 
 st.set_page_config(page_title="Sensor Analysis", layout="wide")
+apply_theme()
 st.title("Sensor Analysis")
 
 df = load_air_quality_data()
@@ -18,7 +20,7 @@ target = st.selectbox("Reference analyzer target", [col for col in REFERENCE_COL
 
 st.subheader("Temporal Behaviour")
 st.plotly_chart(
-    px.line(df, x="timestamp", y=[sensor, target], title=f"{sensor} and {target} over time"),
+    themed_plotly(px.line(df, x="timestamp", y=[sensor, target], title=f"{sensor} and {target} over time")),
     use_container_width=True,
 )
 with st.expander("How to interpret this time-series chart"):
@@ -53,10 +55,10 @@ if len(scatter_df) >= 2:
             y=y_line,
             mode="lines",
             name="Linear trend",
-            line={"color": "#d62728", "width": 2},
+            line={"color": COLORS["warning"], "width": 2},
         )
     )
-st.plotly_chart(fig, use_container_width=True)
+st.plotly_chart(themed_plotly(fig), use_container_width=True)
 with st.expander("How to interpret this scatter plot"):
     st.markdown(
         """
@@ -75,11 +77,14 @@ st.subheader("Correlation Matrix")
 correlation_method = st.selectbox("Correlation method", ["pearson", "spearman"], format_func=str.title)
 corr = sensor_reference_correlation(df, method=correlation_method)
 st.plotly_chart(
-    px.imshow(
-        corr,
-        text_auto=".2f",
-        aspect="auto",
-        title=f"{correlation_method.title()} correlation matrix: sensors and reference gases",
+    themed_plotly(
+        px.imshow(
+            corr,
+            text_auto=".2f",
+            aspect="auto",
+            title=f"{correlation_method.title()} correlation matrix: sensors and reference gases",
+            color_continuous_scale=["#B65B4B", "#F5F8F6", "#0E4548"],
+        )
     ),
     use_container_width=True,
 )
@@ -133,9 +138,9 @@ st.write(
 )
 styled_adjacency = adjacency.style.map(
     lambda value: (
-        "background-color: #1f5f99; color: #ffffff; font-weight: 700"
+        f"background-color: {COLORS['accent']}; color: {COLORS['ink']}; font-weight: 600"
         if value == 1
-        else "background-color: #cfd6df; color: #1f2937; font-weight: 600"
+        else f"background-color: {COLORS['paper']}; color: {COLORS['ink']}; font-weight: 500"
     )
 )
 st.dataframe(styled_adjacency, use_container_width=True)
@@ -170,7 +175,7 @@ else:
             x=edge_x,
             y=edge_y,
             mode="lines",
-            line={"width": 1, "color": "#8c8c8c"},
+            line={"width": 1, "color": COLORS["line"]},
             hoverinfo="none",
             name="Significant correlation",
         )
@@ -185,7 +190,7 @@ else:
             marker={
                 "size": [12 + degree * 2 for degree in node_degree],
                 "color": node_degree,
-                "colorscale": "Viridis",
+                "colorscale": [[0, COLORS["panel"]], [0.5, COLORS["accent"]], [1, COLORS["deep"]]],
                 "showscale": True,
                 "colorbar": {"title": "Degree"},
             },
@@ -201,7 +206,7 @@ else:
         margin={"l": 10, "r": 10, "t": 50, "b": 10},
         height=650,
     )
-    st.plotly_chart(network_fig, use_container_width=True)
+    st.plotly_chart(themed_plotly(network_fig), use_container_width=True)
 
 with st.expander("How to interpret the adjacency matrix and network graph"):
     st.markdown(

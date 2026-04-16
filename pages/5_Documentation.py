@@ -1,17 +1,27 @@
 from pathlib import Path
+import os
 import socket
 import subprocess
 import sys
 
 import streamlit as st
 
+from src.ui.theme import apply_theme
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DOCS_DIR = PROJECT_ROOT / "docs"
 SPHINX_HTML_DIR = DOCS_DIR / "build" / "html"
 SPHINX_INDEX = DOCS_DIR / "build" / "html" / "index.html"
+SPHINX_HTML_DIR_RELATIVE = Path("docs") / "build" / "html"
+SPHINX_INDEX_RELATIVE = SPHINX_HTML_DIR_RELATIVE / "index.html"
 DOCS_PORT = 8765
 DOCS_URL = f"http://localhost:{DOCS_PORT}"
+IS_RENDER = os.getenv("RENDER", "").lower() == "true"
+
+
+def as_posix_path(path: Path) -> str:
+    """Return a stable repository-relative path for display and deployment docs."""
+    return path.as_posix()
 
 
 def is_port_open(host: str = "localhost", port: int = DOCS_PORT) -> bool:
@@ -32,6 +42,7 @@ def start_docs_server() -> None:
 
 
 st.set_page_config(page_title="Documentation", layout="wide")
+apply_theme()
 st.title("Documentation")
 
 st.write(
@@ -82,28 +93,32 @@ It contains:
 """
 )
 
-st.code(r".\venv\Scripts\python.exe -m sphinx -b html docs\source docs\build\html", language="powershell")
+st.code("python -m sphinx -b html docs/source docs/build/html", language="bash")
 
 if SPHINX_INDEX.exists():
     st.success("Sphinx HTML documentation has already been built.")
-    if st.button("Start local documentation server"):
-        if is_port_open():
-            st.info(f"Documentation server is already running at {DOCS_URL}.")
-        else:
-            start_docs_server()
-            st.success(f"Documentation server started at {DOCS_URL}.")
 
-    if is_port_open():
-        st.link_button("Open Sphinx documentation", DOCS_URL)
+    if IS_RENDER:
+        st.info("On Render, serve these files through the deployed app or a static site route instead of a localhost URL.")
     else:
-        st.info("Start the local documentation server, then use the link button.")
+        if st.button("Start local documentation server"):
+            if is_port_open():
+                st.info(f"Documentation server is already running at {DOCS_URL}.")
+            else:
+                start_docs_server()
+                st.success(f"Documentation server started at {DOCS_URL}.")
 
-    st.write("Local file path:")
-    st.code(str(SPHINX_INDEX), language="text")
+        if is_port_open():
+            st.link_button("Open Sphinx documentation", DOCS_URL)
+        else:
+            st.info("Start the local documentation server, then use the link button.")
+
+    st.write("Repository-relative path:")
+    st.code(as_posix_path(SPHINX_INDEX_RELATIVE), language="text")
 else:
     st.warning("Sphinx HTML documentation has not been built yet.")
     st.write("Run the build command above from the repository root, then open:")
-    st.code(str(SPHINX_INDEX), language="text")
+    st.code(as_posix_path(SPHINX_INDEX_RELATIVE), language="text")
 
 with st.expander("How to use the documentation during a technical interview"):
     st.markdown(

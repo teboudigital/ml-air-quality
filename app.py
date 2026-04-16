@@ -1,13 +1,20 @@
 import streamlit as st
 
 from src.config import APP_TITLE
+from src.ui.theme import apply_theme, show_top_right_logo
 from src.utils.analysis import build_dataset_profile
 from src.utils.data_loader import load_air_quality_data
 
 
 st.set_page_config(page_title=APP_TITLE, page_icon="AQ", layout="wide")
+apply_theme()
 
-st.title(APP_TITLE)
+title_col, logo_col = st.columns([5, 1])
+with title_col:
+    st.title(APP_TITLE)
+with logo_col:
+    show_top_right_logo()
+
 st.write(
     "Research-oriented dashboard for exploring noisy air-quality sensor data, "
     "reference analyzer measurements, and regression-based sensor calibration."
