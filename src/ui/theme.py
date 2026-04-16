@@ -51,15 +51,22 @@ def apply_theme() -> None:
         }}
 
         .stApp {{
-            background:
-                radial-gradient(circle at 70% 18%, rgba(111, 155, 142, 0.18), transparent 30rem),
-                linear-gradient(180deg, var(--aq-paper) 0%, #edf4f0 100%);
-            color: var(--aq-ink);
+            background: var(--aq-white);
+            color: #000000;
+        }}
+
+        .main .block-container {{
+            background: var(--aq-white);
+            color: #000000;
         }}
 
         h1, h2, h3, h4, h5, h6 {{
-            color: var(--aq-ink);
+            color: #000000;
             letter-spacing: 0;
+        }}
+
+        p, li, label, span, div[data-testid="stMarkdownContainer"] {{
+            color: #000000;
         }}
 
         h1 {{
