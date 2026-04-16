@@ -1,42 +1,6 @@
 services:
   - type: web
-    name: ml-air-quality
+    name: ml-air-quality-dashboard
     env: python
-    buildCommand: python -m pip install --upgrade pip && python -m pip install -r requirements.txt
-    startCommand: python -m streamlit run app.py --server.headless true --server.port $PORT --server.address 0.0.0.0
-    envVars:
-      - key: PYTHON_VERSION
-        value: 3.13.7
-      - key: APP_LANGUAGE
-        value: en
-      - key: ENGLISH_DASHBOARD_URL
-        value: https://ml-air-quality.onrender.com
-      - key: ITALIAN_DASHBOARD_URL
-        value: https://ml-air-quality-it.onrender.com
-      - key: SPHINX_DOCS_URL
-        value: https://ml-air-quality-docs.onrender.com
-
-  - type: web
-    name: ml-air-quality-it
-    env: python
-    buildCommand: python -m pip install --upgrade pip && python -m pip install -r requirements.txt
-    startCommand: python -m streamlit run app.py --server.headless true --server.port $PORT --server.address 0.0.0.0
-    envVars:
-      - key: PYTHON_VERSION
-        value: 3.13.7
-      - key: APP_LANGUAGE
-        value: it
-      - key: ENGLISH_DASHBOARD_URL
-        value: https://ml-air-quality.onrender.com
-      - key: ITALIAN_DASHBOARD_URL
-        value: https://ml-air-quality-it.onrender.com
-      - key: SPHINX_DOCS_URL
-        value: https://ml-air-quality-docs.onrender.com
-
-  - type: static
-    name: ml-air-quality-docs
-    buildCommand: python -m pip install --upgrade pip && python -m pip install -r requirements.txt && python -m sphinx -E -b html docs/source docs/build/html
-    staticPublishPath: docs/build/html
-    envVars:
-      - key: PYTHON_VERSION
-        value: 3.13.7
+    buildCommand: pip install --upgrade pip && pip install -r requirements.txt
+    startCommand: streamlit run app.py --server.headless true --server.port $PORT --server.address 0.0.0.0

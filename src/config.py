@@ -1,15 +1,8 @@
 from pathlib import Path
-import os
 
 
 APP_TITLE = "Air Quality Sensor Calibration"
-APP_TITLE_IT = "Calibrazione dei Sensori di Qualita dell'Aria"
 RANDOM_STATE = 42
-APP_LANGUAGE = os.getenv("APP_LANGUAGE", "en").lower()
-
-ENGLISH_DASHBOARD_URL = os.getenv("ENGLISH_DASHBOARD_URL", "https://ml-air-quality.onrender.com")
-ITALIAN_DASHBOARD_URL = os.getenv("ITALIAN_DASHBOARD_URL", "https://ml-air-quality-it.onrender.com")
-SPHINX_DOCS_URL = os.getenv("SPHINX_DOCS_URL", "https://ml-air-quality-docs.onrender.com")
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = PROJECT_ROOT / "src" / "data"

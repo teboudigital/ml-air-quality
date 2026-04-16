@@ -73,28 +73,6 @@ Open `http://localhost:8501`.
 pytest
 ```
 
-## Online Deployment
-
-The project is deployed on Render:
-
-- English dashboard: `https://ml-air-quality.onrender.com`
-- Italian dashboard: `https://ml-air-quality-it.onrender.com`
-- Sphinx documentation: `https://ml-air-quality-docs.onrender.com`
-
-The Render blueprint defines two Streamlit web services from the same codebase. The Italian service uses `APP_LANGUAGE=it`, so UI and deployment updates remain shared with the English version.
-
-The Sphinx documentation is deployed as a static site with:
-
-```bash
-python -m pip install --upgrade pip && python -m pip install -r requirements.txt && python -m sphinx -E -b html docs/source docs/build/html
-```
-
-The static publish directory is:
-
-```text
-docs/build/html
-```
-
 ## Development Workflow
 
 The development and reproducibility workflow is documented in:
