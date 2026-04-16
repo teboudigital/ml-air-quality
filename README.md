@@ -73,6 +73,30 @@ Open `http://localhost:8501`.
 pytest
 ```
 
+## Development Workflow
+
+The development and reproducibility workflow is documented in:
+
+```text
+docs/WORKFLOW.md
+```
+
+It covers environment setup, testing, data handling conventions, missing-value policy, feature engineering rules, model evaluation rules, and pre-commit checks.
+
+## Sphinx Documentation
+
+Build the local Sphinx documentation with:
+
+```powershell
+sphinx-build -b html docs/source docs/build/html
+```
+
+Open the generated documentation from:
+
+```text
+docs/build/html/index.html
+```
+
 ## Notebook
 
 The project includes a Jupyter notebook for reproducible EDA and model benchmarking:
