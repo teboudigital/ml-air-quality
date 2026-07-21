@@ -5,27 +5,25 @@ from src.ui.theme import apply_theme, show_top_right_logo
 from src.utils.analysis import build_dataset_profile
 from src.utils.data_loader import load_air_quality_data
 
-
-ENGLISH_DASHBOARD_URL = "https://ml-air-quality.onrender.com"
-ITALIAN_DASHBOARD_URL = "https://ml-air-quality-it.onrender.com"
-
 st.set_page_config(page_title=APP_TITLE, page_icon="AQ", layout="wide")
 apply_theme()
 
-language_cols = st.columns([0.08, 0.08, 0.84])
-language_cols[0].link_button("EN", ENGLISH_DASHBOARD_URL)
-language_cols[1].link_button("IT", ITALIAN_DASHBOARD_URL)
-
-title_col, logo_col = st.columns([5, 1])
+title_col, logo_col = st.columns([6.2, 1.2], vertical_alignment="top")
 with title_col:
-    st.title(APP_TITLE)
+    st.markdown(
+        f"""
+        <div class="aq-hero-copy">
+            <h1>{APP_TITLE}</h1>
+            <p>
+                Research-oriented dashboard for exploring noisy air-quality sensor data,
+                reference analyzer measurements, and regression-based sensor calibration.
+            </p>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 with logo_col:
     show_top_right_logo()
-
-st.write(
-    "Research-oriented dashboard for exploring noisy air-quality sensor data, "
-    "reference analyzer measurements, and regression-based sensor calibration."
-)
 
 df = load_air_quality_data()
 profile = build_dataset_profile(df)

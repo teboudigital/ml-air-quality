@@ -1,8 +1,4 @@
 from pathlib import Path
-import os
-import socket
-import subprocess
-import sys
 
 import streamlit as st
 
@@ -14,9 +10,7 @@ SPHINX_HTML_DIR = DOCS_DIR / "build" / "html"
 SPHINX_INDEX = DOCS_DIR / "build" / "html" / "index.html"
 SPHINX_HTML_DIR_RELATIVE = Path("docs") / "build" / "html"
 SPHINX_INDEX_RELATIVE = SPHINX_HTML_DIR_RELATIVE / "index.html"
-DOCS_PORT = 8765
-DOCS_URL = f"http://localhost:{DOCS_PORT}"
-IS_RENDER = os.getenv("RENDER", "").lower() == "true"
+REMOTE_DOCS_URL = "https://ml-air-quality-docs.onrender.com"
 
 
 def as_posix_path(path: Path) -> str:
@@ -24,26 +18,54 @@ def as_posix_path(path: Path) -> str:
     return path.as_posix()
 
 
-def is_port_open(host: str = "localhost", port: int = DOCS_PORT) -> bool:
-    """Return True when a local documentation server is already reachable."""
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
-        sock.settimeout(0.3)
-        return sock.connect_ex((host, port)) == 0
-
-
-def start_docs_server() -> None:
-    """Start a local static file server for the generated Sphinx HTML docs."""
-    subprocess.Popen(
-        [sys.executable, "-m", "http.server", str(DOCS_PORT), "--directory", str(SPHINX_HTML_DIR)],
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.DEVNULL,
-        creationflags=subprocess.CREATE_NEW_PROCESS_GROUP if sys.platform == "win32" else 0,
-    )
-
-
 st.set_page_config(page_title="Documentation", layout="wide")
 apply_theme()
 st.title("Documentation")
+st.markdown(
+    """
+    <style>
+    button[data-testid="stBaseButton-secondary"] {
+        background: #0E4548 !important;
+        border: 1px solid #0E4548 !important;
+        color: #FFFFFF !important;
+    }
+
+    button[data-testid="stBaseButton-secondary"] * {
+        color: #FFFFFF !important;
+        fill: #FFFFFF !important;
+    }
+
+    button[data-testid="stBaseButton-secondary"]:hover {
+        background: #173C3B !important;
+        border-color: #173C3B !important;
+    }
+
+    button[data-testid="stBaseButton-secondary"]:hover * {
+        color: #FFFFFF !important;
+        fill: #FFFFFF !important;
+    }
+
+    .aq-docs-link {
+        display: inline-block;
+        background: #0E4548;
+        border: 1px solid #0E4548;
+        color: #FFFFFF !important;
+        text-decoration: none !important;
+        font-weight: 700;
+        border-radius: 8px;
+        padding: 0.55rem 0.95rem;
+    }
+
+    .aq-docs-link:hover {
+        background: #173C3B;
+        border-color: #173C3B;
+        color: #FFFFFF !important;
+        text-decoration: none !important;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
 
 st.write(
     "This page summarizes the project documentation available in the repository. "
@@ -95,29 +117,19 @@ It contains:
 
 st.code("python -m sphinx -b html docs/source docs/build/html", language="bash")
 
+st.markdown(
+    f'<a class="aq-docs-link" href="{REMOTE_DOCS_URL}" target="_blank">Open deployed Sphinx documentation</a>',
+    unsafe_allow_html=True,
+)
+
 if SPHINX_INDEX.exists():
     st.success("Sphinx HTML documentation has already been built.")
-
-    if IS_RENDER:
-        st.info("On Render, serve these files through the deployed app or a static site route instead of a localhost URL.")
-    else:
-        if st.button("Start local documentation server"):
-            if is_port_open():
-                st.info(f"Documentation server is already running at {DOCS_URL}.")
-            else:
-                start_docs_server()
-                st.success(f"Documentation server started at {DOCS_URL}.")
-
-        if is_port_open():
-            st.link_button("Open Sphinx documentation", DOCS_URL)
-        else:
-            st.info("Start the local documentation server, then use the link button.")
-
+    st.info("The dashboard links to the deployed static Sphinx site instead of trying to start a local server.")
     st.write("Repository-relative path:")
     st.code(as_posix_path(SPHINX_INDEX_RELATIVE), language="text")
 else:
     st.warning("Sphinx HTML documentation has not been built yet.")
-    st.write("Run the build command above from the repository root, then open:")
+    st.write("Run the build command above from the repository root to regenerate the static site contents:")
     st.code(as_posix_path(SPHINX_INDEX_RELATIVE), language="text")
 
 with st.expander("How to use the documentation during a technical interview"):

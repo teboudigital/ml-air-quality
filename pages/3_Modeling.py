@@ -9,6 +9,33 @@ from src.utils.data_loader import load_air_quality_data
 st.set_page_config(page_title="Regression Modeling", layout="wide")
 apply_theme()
 st.title("Regression Modeling")
+st.markdown(
+    """
+    <style>
+    button[data-testid="stBaseButton-primary"] {
+        background: #0E4548 !important;
+        border: 1px solid #0E4548 !important;
+        color: #FFFFFF !important;
+    }
+
+    button[data-testid="stBaseButton-primary"] * {
+        color: #FFFFFF !important;
+        fill: #FFFFFF !important;
+    }
+
+    button[data-testid="stBaseButton-primary"]:hover {
+        background: #173C3B !important;
+        border-color: #173C3B !important;
+    }
+
+    button[data-testid="stBaseButton-primary"]:hover * {
+        color: #FFFFFF !important;
+        fill: #FFFFFF !important;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
 
 df = load_air_quality_data()
 
