@@ -4,7 +4,7 @@
 
 This project is a modular Python and Streamlit application for analysing the UCI Air Quality dataset. The dataset contains hourly field measurements from an air-quality chemical multisensor device and certified reference analyzer measurements.
 
-The project is designed as a portfolio-level scientific data analysis workflow. It is not a production monitoring platform.
+The project is designed as a self-contained scientific data analysis workflow. It is not a production monitoring platform.
 
 ## Architecture
 

@@ -99,7 +99,7 @@ with st.expander("How to interpret monthly data quality"):
         """
 This line chart shows whether missing data is concentrated in specific months.
 
-If one month has many more missing cells, model performance for that period may be less reliable. In a research interview, this is a good place to mention that missingness is not only a cleaning issue: it can also reveal instrument downtime, calibration problems, or data acquisition issues.
+If one month has many more missing cells, model performance for that period may be less reliable. Missingness is not only a cleaning issue: it can also reveal instrument downtime, calibration problems, or data acquisition issues.
 """
     )
 

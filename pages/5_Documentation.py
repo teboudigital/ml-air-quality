@@ -76,7 +76,7 @@ st.subheader("Repository Documentation")
 docs = [
     {
         "Document": "README.md",
-        "Purpose": "Project overview, installation, dashboard execution, tests, notebooks, and interview positioning.",
+        "Purpose": "Project overview, installation, dashboard execution, tests, methodology, and limitations.",
         "Path": "README.md",
     },
     {
@@ -132,14 +132,14 @@ else:
     st.write("Run the build command above from the repository root to regenerate the static site contents:")
     st.code(as_posix_path(SPHINX_INDEX_RELATIVE), language="text")
 
-with st.expander("How to use the documentation during a technical interview"):
+with st.expander("How the documentation is organized"):
     st.markdown(
         """
-- Use `README.md` for the short project story and setup commands.
-- Use `docs/WORKFLOW.md` to explain engineering discipline and reproducibility.
-- Use `docs/TECHNICAL_ARCHITECTURE.md` to explain architecture and modelling decisions.
-- Use Sphinx API docs to show that the reusable Python modules are documented separately from the Streamlit UI.
-- Use the notebooks to explain the data-analysis reasoning step by step.
+- `README.md`: project overview and setup commands.
+- `docs/WORKFLOW.md`: development workflow and reproducibility rules.
+- `docs/TECHNICAL_ARCHITECTURE.md`: architecture and modelling decisions.
+- Sphinx API docs: reference for the reusable Python modules, documented separately from the Streamlit UI.
+- Notebooks: the data-analysis reasoning step by step.
 """
     )
 
@@ -148,6 +148,6 @@ with st.expander("Why Sphinx is useful here"):
         """
 Sphinx is useful because this project is not only a dashboard. It also contains reusable Python modules for data loading, preprocessing, analysis, metadata, and regression.
 
-For a scientific software engineering role, this shows that the code can be inspected as an API, not only used through the graphical interface.
+The code can therefore be inspected as an API, not only used through the graphical interface.
 """
     )

@@ -79,7 +79,7 @@ The holdout split is chronological, so the model is trained on earlier observati
             """
 The feature set includes sensor responses, weather variables, and temporal features.
 
-It intentionally excludes the other `GT` reference-analyzer gas concentrations. This avoids an overly easy modelling setup where one certified analyzer measurement helps predict another certified analyzer measurement. For an interview, this is important: the project is closer to sensor calibration, not only numerical score optimization.
+It intentionally excludes the other `GT` reference-analyzer gas concentrations. This avoids an overly easy modelling setup where one certified analyzer measurement helps predict another certified analyzer measurement. This keeps the project focused on sensor calibration rather than numerical score optimization.
 """
         )
 

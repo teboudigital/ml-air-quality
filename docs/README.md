@@ -10,7 +10,7 @@ Main documents:
 - `air_quality_analysis_ml_it.ipynb`: Italian explanatory notebook with variable descriptions and graph interpretation.
 - `source/`: Sphinx source documentation for workflow, architecture, and Python API reference.
 
-The documentation is intentionally written in English because the project is meant for portfolio and interview use.
+The documentation is written in English.
 
 Build Sphinx docs from the repository root:
 
